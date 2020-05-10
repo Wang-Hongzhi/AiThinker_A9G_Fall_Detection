@@ -7,7 +7,9 @@
 #define PDP_CONTEXT_USERNAME ""
 #define PDP_CONTEXT_PASSWD ""
 
+extern HANDLE semNetworkSuccess;
+
 bool AttachActivate();
-void NetworkEventDispatch(API_Event_t *pEvent);
+void Network_EventDispatch(API_Event_t *pEvent);
 
 #endif // !_NETWORK_H

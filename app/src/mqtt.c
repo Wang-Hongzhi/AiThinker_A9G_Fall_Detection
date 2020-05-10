@@ -6,6 +6,7 @@
 #include "api_socket.h"
 #include "api_info.h"
 #include "mqtt.h"
+#include "network.h"
 
 #define MQTT_TASK_STACK_SIZE (2048 * 2)
 #define MQTT_TASK_PRIORITY 1
@@ -13,7 +14,6 @@
 
 static HANDLE mqttTaskHandle = NULL;
 
-HANDLE semMqttStart = NULL;
 MQTT_Connect_Info_t ci;
 
 typedef enum
@@ -115,7 +115,7 @@ void OnTimerPublish(void *param)
     err = MQTT_Publish(client, PUBLISH_TOPIC, PUBLISH_PAYLOEAD, strlen(PUBLISH_PAYLOEAD), 1, 2, 0, OnPublish, NULL);
     if (err != MQTT_ERROR_NONE)
         Trace(1, "MQTT publish error, error code:%d", err);
-    // StartTimerPublish(PUBLISH_INTERVAL, client);
+    StartTimerPublish(PUBLISH_INTERVAL, client);
 }
 
 void StartTimerPublish(uint32_t interval, MQTT_Client_t *client)
@@ -174,15 +174,13 @@ void MQTT_TaskEventDispatch(MQTT_Event_t *pEvent)
     }
 }
 
-
 void MQTT_Task(void *pData)
 {
     MQTT_Event_t *event = NULL;
 
-    semMqttStart = OS_CreateSemaphore(0);
-    OS_WaitForSemaphore(semMqttStart, OS_WAIT_FOREVER);
-    OS_DeleteSemaphore(semMqttStart);
-    semMqttStart = NULL;
+    OS_WaitForSemaphore(semNetworkSuccess, OS_WAIT_FOREVER);
+    // OS_DeleteSemaphore(semMqttStart);
+    // semNetworkSuccess = NULL;
 
     Trace(1, "start mqtt");
 
