@@ -178,9 +178,10 @@ void MQTT_Task(void *pData)
 {
     MQTT_Event_t *event = NULL;
 
+    Trace(1, "start");
+
     OS_WaitForSemaphore(semNetworkSuccess, OS_WAIT_FOREVER);
-    // OS_DeleteSemaphore(semMqttStart);
-    // semNetworkSuccess = NULL;
+    OS_ReleaseSemaphore(semNetworkSuccess);
 
     Trace(1, "start mqtt");
 

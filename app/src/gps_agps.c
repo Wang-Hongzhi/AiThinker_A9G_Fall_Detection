@@ -23,6 +23,9 @@ void GPS_AGPS_Task(void *pData)
     uint8_t buffer[300];
 
     OS_WaitForSemaphore(semNetworkSuccess, OS_WAIT_FOREVER);
+    OS_ReleaseSemaphore(semNetworkSuccess);
+
+    OS_Sleep(10000);
 
     //open GPS hardware(UART2 open either)
     GPS_Init();

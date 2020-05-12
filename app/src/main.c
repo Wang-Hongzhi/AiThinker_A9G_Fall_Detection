@@ -12,6 +12,7 @@
 #include "network.h"
 #include "imu.h"
 #include "gps_agps.h"
+#include "uart.h"
 
 #define MAIN_TASK_STACK_SIZE (2048 * 2)
 #define MAIN_TASK_PRIORITY 0
@@ -32,7 +33,8 @@ void MainTask(void *pData)
 
     semNetworkSuccess = OS_CreateSemaphore(0);
 
-    // MQTT_TaskStart();
+    usrUART_Init();
+    MQTT_TaskStart();
     GPIO_TaskStart();
     // IMU_TaskStart();
     GPS_AGPS_TaskStart();
